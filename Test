@@ -1,0 +1,13 @@
+```lualocal r = game:GetService("Players").LocalPlayer
+
+r.Chatted:Connect(function(chat)
+    if chat == ";day" then
+        game.Lighting.TimeOfDay = 14
+    end
+end)
+r.Chatted:Connect(function(chat)
+    if chat == ";night" then
+        game.Lighting.TimeOfDay = 1
+    end
+end)
+```
