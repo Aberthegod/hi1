@@ -1,13 +1,15 @@
-```lualocal r = game:GetService("Players").LocalPlayer
+```lua
 
-r.Chatted:Connect(function(chat)
-    if chat == ";day" then
-        game.Lighting.TimeOfDay = 14
+local r = game:GetService("Players").LocalPlayer
+
+for _,Player in pairs(game.Players:GetPlayers()) do
+    if Player.Name ~= r.Name then
+        Player.Chatted:Connect(function(msg)
+            if string.sub(msg, 1, 6) == (":night ") then
+                game.Lighting.TimeOfDay = 1
+            end
+        end)
     end
-end)
-r.Chatted:Connect(function(chat)
-    if chat == ";night" then
-        game.Lighting.TimeOfDay = 1
-    end
-end)
+end
+
 ```
