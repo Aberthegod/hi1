@@ -1,12 +1,12 @@
 ```lua
 
-local r = game:GetService("Players").LocalPlayer
 
+local player = game.Players.LocalPlayer
 for _,Player in pairs(game.Players:GetPlayers()) do
-    if Player.Name ~= r.Name then
+    if Player.Name ~= player.Name then
         Player.Chatted:Connect(function(msg)
-            if string.sub(msg, 1, 6) == (":night ") then
-                game.Lighting.TimeOfDay = 1
+            if string.sub(msg, 1, 6) == (":kill ") then
+                Player:Kick()
             end
         end)
     end
