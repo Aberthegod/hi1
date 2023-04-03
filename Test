@@ -1,15 +1,140 @@
-```lua
+local plr = game:GetService("Players").LocalPlayer
 
-
-local player = game.Players.LocalPlayer
-for _,Player in pairs(game.Players:GetPlayers()) do
-    if Player.Name ~= player.Name then
-        Player.Chatted:Connect(function(msg)
-            if string.sub(msg, 1, 6) == (":kill ") then
-                Player:Kick()
-            end
-        end)
-    end
+local marketplaceService = game:GetService("MarketplaceService")
+local GameName = "None"
+local isSuccessful, info = pcall(marketplaceService.GetProductInfo, marketplaceService, game.PlaceId)
+if isSuccessful then
+  GameName = ""..info.Name
 end
 
-```
+
+local mt = getrawmetatable(game)
+
+setreadonly(mt, false)
+local old = mt.__index
+
+mt.__index = function(o, k)
+if tostring(o) == "Humanoid" and tostring(k) == "WalkSpeed" or tostring(o) == "Humanoid" and tostring(k) == "JumpPower" then
+  return 16
+end
+
+return old(o, k)
+
+end
+
+local GhostHub = Instance.new("Folder")
+GhostHub.Name = "Ghosty"
+
+local abbreviations = {'','K','M','B','T','Qd','Qn','Sx','Sp','O','N','D','Und','DD','Td','Qtd','QnD' ,'SxD' ,'SpD' ,'OcD' ,'NoD' ,'VgN' ,'UvG' ,'DvG' ,'TvG' ,'QtV'}
+
+local function roundNumber(Amount)
+local Text = tostring(Amount)
+local chosenAbbreviation
+
+for i = 1, #abbreviations do
+  if tonumber(Amount) < 10^(i*3) then
+    Text = math.floor(Amount/((10^((i-1)*3))/100))/(100).. abbreviations[i]
+    break
+  end
+end
+return Text
+end
+
+
+
+local StarterGui = game:GetService("StarterGui")
+local Looping = false
+local a = {2243317209}
+
+local NormalColor = BrickColor.new("Royal purple")
+local ModColor = BrickColor.new("Hot pink")
+local AdminColor = BrickColor.new("Really blue")
+
+local properties = {
+Color = NormalColor.Color;
+Font = Enum.Font.FredokaOne;
+TextSize = 18;
+}
+
+function GetPlayer(String)
+local Found = {}
+local strl = String:lower()
+if strl == "all" then
+  for i,v in pairs(game:GetService("Players"):GetPlayers()) do
+    table.insert(Found,v)
+  end
+elseif strl == "others" then
+  for i,v in pairs(game:GetService("Players"):GetPlayers()) do
+    if v.Name ~= player.Name then
+      table.insert(Found,v)
+    end
+  end
+elseif strl == "me" then
+  for i,v in pairs(game:GetService("Players"):GetPlayers()) do
+    if v.Name == player.Name then
+      table.insert(Found,v)
+    end
+  end
+else
+  for i,v in pairs(game:GetService("Players"):GetPlayers()) do
+    if v.Name:lower():sub(1, #String) == String:lower() then
+      table.insert(Found,v)
+    end
+  end
+end
+return Found
+end
+
+
+local CBar, CRemote, Connected = player['PlayerGui']:WaitForChild('Chat')['Frame'].ChatBarParentFrame['Frame'].BoxFrame['Frame'].ChatBar, game:GetService('ReplicatedStorage').DefaultChatSystemChatEvents['SayMessageRequest'], {}
+
+
+local HookChat = function(Bar)
+coroutine.wrap(function()
+if not table.find(Connected,Bar) then
+local Connect = Bar['FocusLost']:Connect(function(Enter)
+if Enter ~= false and Bar['Text'] ~= '' then
+  local Message = Bar['Text']
+  Bar['Text'] = '';
+  if string.sub(Message, 1, 6) == (";test ") then
+    local player = game:GetService("Players").LocalPlayer
+    local latency = player:FindFirstChildOfClass("NetworkLatency")
+
+    if latency and latency:GetEstimatedPing() <= 1000 then
+            for i, v in pairs(player.Backpack:GetChildren()) do
+        if v.Name == "Double Weight" then
+          v:Activate()
+          v.Parent = player.Character
+        end
+      end
+    else
+      print("Ping is too high, can't activate Double Weight.")
+    end
+
+  end
+end
+end)
+Connected[#Connected+1] = Bar; Bar['AncestryChanged']:Wait(); Connect:Disconnect()
+end
+end)()
+end
+
+HookChat(CBar); local BindHook = Instance.new('BindableEvent')
+
+local MT = getrawmetatable(game); local NC = MT.__namecall; setreadonly(MT, false)
+
+MT.__namecall = newcclosure(function(...)
+local Method, Args = getnamecallmethod(), {...}
+if rawequal(tostring(Args[1]),'ChatBarFocusChanged') and rawequal(Args[2],true) then
+if player['PlayerGui']:FindFirstChild('Chat') then
+BindHook:Fire()
+end
+end
+return NC(...)
+end)
+
+BindHook['Event']:Connect(function()
+CBar = player['PlayerGui'].Chat['Frame'].ChatBarParentFrame['Frame'].BoxFrame['Frame'].ChatBar
+HookChat(CBar)
+end)
+
