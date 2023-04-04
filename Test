@@ -18,7 +18,6 @@ for _, p in ipairs(game.Players.LocalPlayer:GetChildren()) do
 	table.sort(players)
 end
 
-local ping = game:GetService("Stats").NetworkServerStats.Ping
 
 function Switching(value)
     if value == true then
