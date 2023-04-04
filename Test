@@ -153,9 +153,6 @@ Tab:AddButton({
     end
 end
 
-properties.Text = "[Ghost]: Ping: "..ping.."
-properties.Color = NormalColor.Color
-StarterGui:SetCore("ChatMakeSystemMessage", properties)
 
 local timer = 0.0008 * amount
 local shouldFarm = true
@@ -411,7 +408,3 @@ Tab1:AddButton({
         end
   	end    
 })
-
-properties.Text = "[Ghost]: Anti Afk!"
-properties.Color = ModColor.Color
-StarterGui:SetCore("ChatMakeSystemMessage", properties)
